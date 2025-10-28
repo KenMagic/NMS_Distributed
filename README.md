@@ -260,4 +260,18 @@ The system demonstrates distributed architecture, HttpClient communication, JWT 
 | Lecturer | lecturer@FUNewsManagement.org | @1 |
 
 
+---
+
+
+## Screenshots / Sample Outputs
+
+**Dashboard (Admin view)**  
+![Dashboard](./Screenshots/Dashboard.png)
+
+**API Response Example**  
+![API Response](./Screenshots/Responses.png)
+
+**AI Tag Suggestion**  
+![AI Tag Suggestion](./Screenshots/AI.png)
+
 
