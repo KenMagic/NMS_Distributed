@@ -165,35 +165,20 @@ The system demonstrates distributed architecture, HttpClient communication, JWT 
 ## Screen-Level Requirements  
 
 
-
 | Page / Feature | API Endpoint | Description | Notes |
-
 |----------------|--------------|-------------|-------|
-
 | Login | `/api/auth/login` | User authentication | Store access_token & refresh_token, show Toast on failure, auto-refresh JWT |
-
 | Dashboard (Admin) | `/api/analytics/dashboard` | Display article statistics | Chart.js Pie/Bar, filter by date/category/status, Excel export |
-
 | News List (Staff) | `/api/news` | List articles | Pagination, search, sort by creation date, Active/Inactive color |
-
 | Create/Edit News | `/api/news`, `/api/news/{id}` | Add or update articles | Bootstrap Modal, validate fields, AI tag suggestions |
-
 | News Detail | `/api/news/{id}`, `/api/recommend/{id}` | Article details | Show up to 3 related articles, responsive reading layout |
-
 | Category Management | `/api/category` | Manage categories | Prevent deletion if articles exist, toggle IsActive, show article count |
-
 | Tag Management | `/api/tag` | Manage tags | Prevent duplicate names, search, show articles per tag |
-
 | Account Management | `/api/account` | Manage accounts | Cannot delete accounts with created articles, require old password for changes, filter by role |
-
 | AI Tag Suggestion | `/api/ai/suggest-tags` | Suggest tags for content | Display as chips/badges, allow quick selection |
-
 | Notification Center | `/hubs/notifications` | Live notifications | Toast or 🔔 icon, keep last 10 notifications |
-
 | Offline Mode | - | When API is unreachable | Banner “Offline Mode”, show cached data, disable CRUD |
-
 | Audit Log | `/api/auditlog` | Track changes | Show User, Action, Entity, Timestamp, Before/After JSON, filterable |
-
 
 
 **General Notes:**  
@@ -269,13 +254,9 @@ The system demonstrates distributed architecture, HttpClient communication, JWT 
 
 
 | Role  | Email | Password |
-
 |-------|-------|----------|
-
 | Admin | admin@FUNewsManagement.org | @@abc123@@ |
-
 | Staff | staff@FUNewsManagement.org | @1 |
-
 | Lecturer | lecturer@FUNewsManagement.org | @1 |
 
 
