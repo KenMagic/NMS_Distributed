@@ -1,0 +1,35 @@
+﻿@using static FUNewsManagement_FE.Controllers.TagController
+@model TagArticlesViewModel
+
+<h2>Articles for Tag: @Model.TagName</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Author</th>
+            <th>Created Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Articles.Any())
+        {
+            <tr><td colspan="5" class="text-center">No articles found</td></tr>
+        }
+        else
+        {
+            foreach (var a in Model.Articles)
+            {
+                <tr>
+                    <td>@a.NewsTitle</td>
+                    <td>@a.CategoryName</td>
+                    <td>@a.CreatedByName</td>
+                    <td>@a.CreatedDate?.ToString("yyyy-MM-dd")</td>
+                    <td>@(a.NewsStatus ? "Active" : "Inactive")</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

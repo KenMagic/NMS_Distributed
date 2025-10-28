@@ -1,0 +1,120 @@
+﻿@using FUNewsManagement_FE.ViewModels
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>Admin Dashboard</h2>
+
+<!-- Filter form -->
+<form method="get" class="mb-3">
+    From: <input type="date" name="from" value="@Model.From?.ToString("yyyy-MM-dd")" />
+    To: <input type="date" name="to" value="@Model.To?.ToString("yyyy-MM-dd")" />
+    CategoryId: <input type="number" name="categoryId" value="@Model.CategoryId" />
+    AuthorId: <input type="number" name="authorId" value="@Model.AuthorId" />
+    Status:
+    <select name="status">
+        <option value="">All</option>
+        <option value="true" @(Model.Status == true ? "selected" : "")>Published</option>
+        <option value="false" @(Model.Status == false ? "selected" : "")>Draft</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Filter</button>
+    <a href="@Url.Action("ExportExcel", new { from = Model.From?.ToString("yyyy-MM-dd"), to = Model.To?.ToString("yyyy-MM-dd"), categoryId = Model.CategoryId, authorId = Model.AuthorId, status = Model.Status })" class="btn btn-success">Export Excel</a>
+</form>
+
+<!-- Debug dữ liệu -->
+<pre>
+ByCategory: @System.Text.Json.JsonSerializer.Serialize(Model.ByCategory)
+ByStatus: @System.Text.Json.JsonSerializer.Serialize(Model.ByStatus)
+Trending: @System.Text.Json.JsonSerializer.Serialize(Model.TrendingArticles)
+</pre>
+
+<!-- Charts -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <canvas id="categoryChart" width="400" height="300" style="max-width:100%;"></canvas>
+    </div>
+    <div class="col-md-6">
+        <canvas id="statusChart" width="400" height="300" style="max-width:100%;"></canvas>
+    </div>
+</div>
+
+<!-- Trending Articles Table -->
+<h3>Trending Articles</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Author</th>
+            <th>Views</th>
+            <th>Status</th>
+            <th>Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model.TrendingArticles)
+        {
+            <tr>
+                <td>@a.Title</td>
+                <td>@a.CategoryName</td>
+                <td>@a.AuthorName</td>
+                <td>@a.Views</td>
+                <td>@(a.NewsStatus == true ? "Published" : "Draft")</td>
+                <td>@a.CreatedDate?.ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // --- Prepare data ---
+            var categoryLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ByCategory.Select(c => c.CategoryName ?? "N/A")));
+            var categoryValues = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ByCategory.Select(c => c.Count)));
+
+            var statusLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ByStatus.Select(s => s.Status ?? "N/A")));
+            var statusValues = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ByStatus.Select(s => s.Count)));
+
+            console.log("categoryLabels", categoryLabels, "categoryValues", categoryValues);
+            console.log("statusLabels", statusLabels, "statusValues", statusValues);
+
+            // --- Pie Chart - Category ---
+            var ctxCategory = document.getElementById('categoryChart').getContext('2d');
+            new Chart(ctxCategory, {
+                type: 'pie',
+                data: {
+                    labels: categoryLabels,
+                    datasets: [{
+                        data: categoryValues,
+                        backgroundColor: ['#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // --- Bar Chart - Status ---
+            var ctxStatus = document.getElementById('statusChart').getContext('2d');
+            new Chart(ctxStatus, {
+                type: 'bar',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        label: 'Articles by Status',
+                        data: statusValues,
+                        backgroundColor: '#36A2EB'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        });
+    </script>
+

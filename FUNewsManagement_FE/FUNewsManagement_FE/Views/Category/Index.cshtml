@@ -1,0 +1,58 @@
+﻿@using static FUNewsManagement_FE.Controllers.CategoryController
+@model List<CategoryDto>
+@{
+    ViewData["Title"] = "Category Management";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<h2>Category Management</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="mb-2">
+    <form method="get" class="d-flex gap-2 mb-2">
+        <input type="text" name="searchName" placeholder="Search Name" class="form-control w-auto">
+        <input type="text" name="searchDesc" placeholder="Search Description" class="form-control w-auto">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+    <a class="btn btn-success" asp-action="Create">Add Category</a>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Parent</th>
+            <th>Active</th>
+            <th>Article Count</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cat in Model)
+        {
+            var parent = Model.FirstOrDefault(p => p.CategoryId == cat.ParentCategoryId);
+            <tr>
+                <td>@cat.CategoryName</td>
+                <td>@cat.CategoryDesciption</td>
+                <td>@(parent?.CategoryName ?? "None")</td>
+                <td>@(cat.IsActive ? "Active" : "Inactive")</td>
+                <td>@cat.ArticleCount</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@cat.CategoryId">Edit</a>
+
+                    <form method="post" asp-action="Delete" asp-route-id="@cat.CategoryId" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+
+                    <form method="post" asp-action="ToggleActive" asp-route-id="@cat.CategoryId" asp-route-isActive="@(!cat.IsActive)" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-secondary">@(!cat.IsActive ? "Activate" : "Deactivate")</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

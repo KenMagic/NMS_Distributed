@@ -1,0 +1,51 @@
+﻿@model List<FUNewsManagement_FE.Controllers.TagController.TagDto>
+@{
+    ViewData["Title"] = "Tag Management";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<h2>Tag Management</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<form method="get" class="d-flex gap-2 mb-3">
+    <input type="text" name="searchTag" value="@ViewBag.SearchTag" placeholder="Search Tag" class="form-control w-auto">
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a class="btn btn-success" asp-action="Create">Add Tag</a>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tag Name</th>
+            <th>Note</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count == 0)
+        {
+            <tr><td colspan="3" class="text-center">No tags found</td></tr>
+        }
+        else
+        {
+            @foreach (var tag in Model)
+            {
+                <tr>
+                    <td>@tag.TagName</td>
+                    <td>@tag.Note</td>
+                    <td>
+                        <a class="btn btn-sm btn-info" asp-action="Articles" asp-route-id="@tag.TagId">View Articles</a>
+                        <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@tag.TagId">Edit</a>
+                        <form asp-action="Delete" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@tag.TagId" />
+                            <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('Delete this tag?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

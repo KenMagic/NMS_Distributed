@@ -1,0 +1,23 @@
+﻿@model FUNewsManagement_FE.Controllers.TagController.TagDto
+@{
+    ViewData["Title"] = "Edit Tag";
+}
+
+<h2>Edit Tag</h2>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="TagId" />
+    <div class="mb-3">
+        <label asp-for="TagName" class="form-label">Tag Name</label>
+        <input asp-for="TagName" class="form-control" required />
+        <span asp-validation-for="TagName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Note" class="form-label">Note</label>
+        <input asp-for="Note" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+

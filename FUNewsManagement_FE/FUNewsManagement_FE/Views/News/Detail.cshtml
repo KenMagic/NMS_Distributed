@@ -1,0 +1,35 @@
+﻿@using static FUNewsManagement_FE.Controllers.NewsController
+@model NewsDetailViewModel
+@{
+    ViewData["Title"] = "News Detail";
+}
+
+<h2>@Model.News?.NewsTitle</h2>
+
+@if (Model.News != null)
+{
+    <p>
+        <strong>Category:</strong> @Model.News.CategoryName |
+        <strong>Author:</strong> @Model.News.CreatedByName |
+        <strong>Date:</strong> @Model.News.CreatedDate?.ToString("yyyy-MM-dd")
+    </p>
+    <hr>
+    <div>@Html.Raw(Model.News.NewsContent)</div>
+}
+
+<h4>Related Articles</h4>
+<ul class="list-group">
+    @if (Model.RelatedArticles.Count == 0)
+    {
+        <li class="list-group-item">No related articles</li>
+    }
+    else
+    {
+        @foreach (var r in Model.RelatedArticles)
+        {
+            <li class="list-group-item">
+                <a href="@Url.Action("Detail", "News", new { id = r.NewsArticleId })">@r.NewsTitle</a>
+            </li>
+        }
+    }
+</ul>

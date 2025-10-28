@@ -1,0 +1,93 @@
+﻿@using static FUNewsManagement_FE.Controllers.NewsController
+@model NewsIndexViewModel
+@{
+    ViewData["Title"] = "News Management";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>News Management</h2>
+
+<form method="get" class="d-flex flex-wrap gap-2 mb-3">
+    <input type="text" name="searchTitle" placeholder="Search Title" value="@Model.SearchTitle" class="form-control w-auto">
+    <input type="text" name="searchAuthor" placeholder="Search Author" value="@Model.SearchAuthor" class="form-control w-auto">
+    @* Category Filter *@
+    @Html.DropDownListFor(
+    m => m.FilterCategory,
+        new SelectList(Model.Categories, "CategoryId", "CategoryName", Model.FilterCategory),
+        "All Categories",
+        new { @class = "form-select w-auto" }
+        )
+
+    @* Status Filter *@
+    @Html.DropDownListFor(
+        m => m.FilterStatus,
+        new SelectList(new List<SelectListItem>
+        {
+        new SelectListItem { Text = "All Status", Value = "" },
+        new SelectListItem { Text = "Active", Value = "true" },
+        new SelectListItem { Text = "Inactive", Value = "false" }
+        }, "Value", "Text", Model.FilterStatus?.ToString().ToLower()),
+        new { @class = "form-select w-auto" }
+        )
+    <input type="date" name="filterFrom" class="form-control w-auto" value="@(Model.FilterFrom?.ToString("yyyy-MM-dd"))">
+    <input type="date" name="filterTo" class="form-control w-auto" value="@(Model.FilterTo?.ToString("yyyy-MM-dd"))">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Author</th>
+            <th>Created Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.NewsList.Count == 0)
+        {
+            <tr><td colspan="6" class="text-center">No news found</td></tr>
+        }
+        else
+        {
+            @foreach (var n in Model.NewsList)
+            {
+                <tr>
+                    <td>
+                        <a href="@Url.Action("Detail", "News", new { id = n.NewsArticleId })">
+                            @n.NewsTitle
+                        </a>
+                    </td>
+
+                    <td>@Model.Categories.FirstOrDefault(c => c.CategoryId == n.CategoryId)?.CategoryName</td>
+                    <td>@(n.NewsStatus ? "Active" : "Inactive")</td>
+                    <td>@n.CreatedByName</td>
+                    <td>@n.CreatedDate?.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        @* Link đến action Edit / Delete *@
+                        <a class="btn btn-sm btn-warning" href="@Url.Action("Edit", "News", new { id = n.NewsArticleId })">Edit</a>
+                        <form method="post" asp-action="Delete" asp-controller="News" style="display:inline;">
+                            <input type="hidden" name="id" value="@n.NewsArticleId" />
+                            <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('Are you sure you want to delete this article?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<nav>
+    <ul class="pagination">
+        <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action("Index", new { page = Model.Page - 1, searchTitle = Model.SearchTitle, searchAuthor = Model.SearchAuthor, filterCategory = Model.FilterCategory, filterStatus = Model.FilterStatus, filterFrom = Model.FilterFrom?.ToString("yyyy-MM-dd"), filterTo = Model.FilterTo?.ToString("yyyy-MM-dd") })">Prev</a>
+        </li>
+        <li class="page-item"><span class="page-link">@Model.Page</span></li>
+        <li class="page-item">
+            <a class="page-link" href="@Url.Action("Index", new { page = Model.Page + 1, searchTitle = Model.SearchTitle, searchAuthor = Model.SearchAuthor, filterCategory = Model.FilterCategory, filterStatus = Model.FilterStatus, filterFrom = Model.FilterFrom?.ToString("yyyy-MM-dd"), filterTo = Model.FilterTo?.ToString("yyyy-MM-dd") })">Next</a>
+        </li>
+    </ul>
+</nav>

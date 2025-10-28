@@ -1,0 +1,65 @@
+﻿@using static FUNewsManagement_FE.Controllers.AccountController
+@model AccountIndexViewModel
+@{
+    ViewData["Title"] = "Account Management";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<h2>Account Management</h2>
+
+<form method="get" class="d-flex gap-2 mb-3 flex-wrap">
+    <input type="text" name="searchName" value="@Model.SearchName" placeholder="Search Name" class="form-control w-auto" />
+    <input type="text" name="searchEmail" value="@Model.SearchEmail" placeholder="Search Email" class="form-control w-auto" />
+    <select asp-for="FilterRole" class="form-select w-auto" asp-items="ViewBag.Roles">
+        <option value="">All Roles</option>
+    </select>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a class="btn btn-success" asp-action="Create">Add Account</a>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Accounts.Count == 0)
+        {
+            <tr><td colspan="4" class="text-center">No accounts found</td></tr>
+        }
+        else
+        {
+            @foreach (var acc in Model.Accounts)
+            {
+                <tr>
+                    <td>@acc.AccountName</td>
+                    <td>@acc.AccountEmail</td>
+                    <td>@Model.Roles[acc.AccountRole]</td>
+                    <td>
+                        <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@acc.AccountId">Edit</a>
+                        <form method="post" asp-action="Delete" asp-route-id="@acc.AccountId" style="display:inline">
+                            <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<nav>
+    <ul class="pagination">
+        <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action("Index", new { page = Model.Page - 1, searchName = Model.SearchName, searchEmail = Model.SearchEmail, filterRole = Model.FilterRole })">Prev</a>
+        </li>
+        <li class="page-item"><span class="page-link">@Model.Page</span></li>
+        <li class="page-item">
+            <a class="page-link" href="@Url.Action("Index", new { page = Model.Page + 1, searchName = Model.SearchName, searchEmail = Model.SearchEmail, filterRole = Model.FilterRole })">Next</a>
+        </li>
+    </ul>
+</nav>

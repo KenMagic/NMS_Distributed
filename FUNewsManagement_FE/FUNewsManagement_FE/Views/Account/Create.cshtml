@@ -1,0 +1,37 @@
+﻿@using static FUNewsManagement_FE.Controllers.AccountController
+@model AccountCreateUpdateDto
+@{
+    ViewData["Title"] = "Create Account";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>Create Account</h2>
+
+<form method="post" class="w-50">
+    <div class="mb-3">
+        <label>Name</label>
+        <input asp-for="AccountName" class="form-control" />
+        <span asp-validation-for="AccountName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="AccountEmail" class="form-control" type="email" />
+        <span asp-validation-for="AccountEmail" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label>Role</label>
+        <select asp-for="AccountRole" class="form-select">
+            <option value="1">Staff</option>
+            <option value="2">Lecturer</option>
+        </select>
+        <span asp-validation-for="AccountRole" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label>Password</label>
+        <input asp-for="AccountPassword" class="form-control" type="password" />
+        <span asp-validation-for="AccountPassword" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
