@@ -266,12 +266,12 @@ The system demonstrates distributed architecture, HttpClient communication, JWT 
 ## Screenshots / Sample Outputs
 
 **Dashboard (Admin view)**  
-![Dashboard](./Screenshots/Dashboard.png)
+![Dashboard](./Screenshoots/Dashboard.png)
 
 **API Response Example**  
-![API Response](./Screenshots/Responses.png)
+![API Response](./Screenshoots/Responses.png)
 
 **AI Tag Suggestion**  
-![AI Tag Suggestion](./Screenshots/AI.png)
+![AI Tag Suggestion](./Screenshoots/AI.png)
 
 
